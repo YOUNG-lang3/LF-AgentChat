@@ -14,13 +14,13 @@
           element-loading-background="rgba(58, 57, 65, 0.92)"
         />
       </div>
-      <UserInput @send="handleSend" />
+      <UserInput v-model="currentDraft" @send="handleSend" />
     </div>
   </main>
 </template>
 
 <script setup>
-import { nextTick, ref, watch } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import SideMenu from '../components/SideMenu.vue';
 import UserInput from '../components/UserInput.vue';
 import { useChatsStore } from '../store/chats.js';
@@ -30,6 +30,16 @@ const chatsStore = useChatsStore()
 const chatContent = ref(null)
 const isLoading = ref(false)
 const loadingChatId = ref(null)
+const currentDraft = computed({
+  get: () => chatsStore.userDraft[chatsStore.activeChatId] ?? '',
+  set: (text) => {
+    let chatId = chatsStore.activeChatId
+    if (!chatId) {
+      chatId = chatsStore.createChat().id
+    }
+    chatsStore.setUserDraft(chatId, text)
+  },
+})
 
 watch(
   [

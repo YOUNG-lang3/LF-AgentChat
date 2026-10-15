@@ -1,12 +1,13 @@
 <template>
     <div class="input-box">
         <el-input
-            v-model="message"
+            :model-value="modelValue"
             class="message-input"
             type="textarea"
             :rows="4"
             placeholder="和我聊天吧"
             resize="none"
+            @update:model-value="emit('update:modelValue', $event)"
             @keydown.enter.exact.prevent="sendMessage"
         />
         <div class="input-toolbar">
@@ -19,17 +20,20 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+const props = defineProps({
+    modelValue: {
+        type: String,
+        default: '',
+    },
+})
 
-const message = ref('')
-
-const emit = defineEmits(['send'])
+const emit = defineEmits(['send', 'update:modelValue'])
 
 const sendMessage = () => {
-    const content = message.value.trim()
+    const content = props.modelValue.trim()
     if(!content) return
     emit('send', content)
-    message.value = ''
+    emit('update:modelValue', '')
 }
 </script>
 

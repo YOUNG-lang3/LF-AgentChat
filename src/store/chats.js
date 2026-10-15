@@ -6,7 +6,8 @@ function saveChats(store) {
         STORAGE_KEY,
         JSON.stringify({
             conversations: store.conversations,
-            activeChatId: store.activeChatId
+            activeChatId: store.activeChatId,
+            userDraft: store.userDraft
         })
     )
 }
@@ -17,7 +18,8 @@ export const useChatsStore = defineStore('chats', {
         const data = saved ? JSON.parse(saved) : {}
         return {
             conversations: data.conversations ?? [],
-            activeChatId: data.activeChatId ?? null
+            activeChatId: data.activeChatId ?? null,
+            userDraft: data.userDraft ?? {}
         }
     },
     getters: {
@@ -88,6 +90,11 @@ export const useChatsStore = defineStore('chats', {
                     createAt: Date.now()
                 })
             }, 800);
+        },
+        setUserDraft(chatId, text) {
+            if(!chatId) return
+            this.userDraft[chatId] = text
+            saveChats(this)          
         }
     }
 })
