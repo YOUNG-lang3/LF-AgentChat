@@ -1,10 +1,3 @@
-<script setup>
-import { ref } from 'vue'
-
-const username = ref('')
-const password = ref('')
-</script>
-
 <template>
   <main class="login-page">
     <a
@@ -18,10 +11,10 @@ const password = ref('')
       <span aria-hidden="true">↗</span>
     </a>
 
-    <section class="login-card" aria-labelledby="login-title" @submit="$router.push('/home')">
+    <section class="login-card" aria-labelledby="login-title">
       <h1 id="login-title">智能问答机器人</h1>
 
-      <el-form class="login-form" @submit.prevent>
+      <el-form class="login-form" @submit.prevent="login()">
         <el-input
           v-model="username"
           size="large"
@@ -47,6 +40,19 @@ const password = ref('')
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import { useAuthStore, USERNAME, PASSWORD } from '../store/auth.js'
+import { useRouter } from 'vue-router'
+
+const authStore = useAuthStore()
+const username = ref('')
+const password = ref('')
+const router = useRouter()
+
+const login = () => {
+  authStore.authLogin(username.value, password.value)
+  router.push('/home')
+}
 
 </script>
 

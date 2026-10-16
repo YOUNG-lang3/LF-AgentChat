@@ -45,9 +45,11 @@
 <script setup>
 import router from '../router';
 import { useChatsStore } from '../store/chats';
+import { useAuthStore } from '../store/auth';
 import { ElMessageBox } from 'element-plus';
 
 const chatsStore = useChatsStore()
+const authStore = useAuthStore()
 const conversations = chatsStore.$state.conversations
 
 const handleCommand = (command, chatId) => {
@@ -80,6 +82,7 @@ const chat_rename = async (chatId) => {
 
 const handleLogout = (command) => {
     if(command === 'logout') {
+        authStore.authLogout()
         router.push('/')
     }
 }
